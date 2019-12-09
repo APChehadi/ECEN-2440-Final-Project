@@ -33,6 +33,8 @@ void init_i2c(void) {
 }
 
 
+
+
 void rx_data(uint8_t address, uint8_t register) {
     // MASTER TRANSMITTER MODE
     // Slave transmitter mode is entered when the slave address transmitted by the master is identical to its own
@@ -44,6 +46,9 @@ void rx_data(uint8_t address, uint8_t register) {
 
     // Select the size of the slave address with the UCSLA10 bit
     EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_SLA10;
+
+    // UCBxTBCNT must be set to the number of bytes that are to be transmitted or received
+    EUSCI_B0 -> TBCNT = 1;
 
     // Setting UCTR for transmitter mode
     EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_TR;
@@ -64,6 +69,9 @@ void rx_data(uint8_t address, uint8_t register) {
     // MASTER RECEIVE MODE
     // Clear the UCTR for receiver mode
     EUSCI_B0 -> CTLW0 &= ~(EUSCI_B_CTLW0_TR);
+
+    // UCBxTBCNT must be set to the number of bytes that are to be transmitted or received
+    EUSCI_B0 -> TBCNT = 1;
 
     // Set UCTXSTT to generate a START condition
     EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_TXSTT;
@@ -86,4 +94,50 @@ void rx_data(uint8_t address, uint8_t register) {
 
     // Return Slave Receive Data
     return rx_register_buffer_data;
+}
+
+
+
+
+void tx_data(uint8_t address, uint8_t register, uint8_t value) {
+    // MASTER TRANSMITTER MODE
+    // Slave transmitter mode is entered when the slave address transmitted by the master is identical to its own
+    // Master needs to act as transmitter to send the address so it can enter Slave Transmitter Mode / Master Receive Mode
+    EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_TR;
+
+    // Write desired slave address to the UCBxI2CSA register
+    EUSCI_B0 -> I2CSA = address;
+
+    // Select the size of the slave address with the UCSLA10 bit
+    EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_SLA10;
+
+    // UCBxTBCNT must be set to the number of bytes that are to be transmitted or received
+    EUSCI_B0 -> TBCNT = 1;
+
+    // Setting UCTR for transmitter mode
+    EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_TR;
+
+    // Set UCTXSTT to generate a START condition
+    EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_TXSTT;
+
+    // Wait for START condition
+    while((EUSCI_B0 -> CTLW0) & EUSCI_B_CTLW0_TXSTT);
+
+    // Transfer register from Transfer Buffer
+    EUSCI_B0->TXBUF = register;
+
+    // Wait for buffer to transfer register
+    while(!((EUSCI_B0 -> IFG) & EUSCI_B_IFG_TXIFG0));
+
+    // Transfer value from Transfer Buffer
+    EUSCI_B0->TXBUF = value;
+
+    // Wait for buffer to transfer value
+    while(!((EUSCI_B0 -> IFG) & EUSCI_B_IFG_TXIFG0));
+
+    // Generate STOP condition
+    EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_TXSTP;
+
+    // Wait for the STOP condition
+    while((EUSCI_B0 -> CTLW0) & EUSCI_B_CTLW0_TXSTT);
 }

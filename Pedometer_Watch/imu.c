@@ -2,50 +2,57 @@
  * imu.c
  *
  *  Created on: Dec 9, 2019
- *      Author: adamp
+ *      Author: Adam Chehadi
  */
 
 #include "msp.h"
 #include "i2c.h"
 #include "imu.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-#define DRV2605L        0x5A        // 7-bit address (8.5.3.1 note)
+#define IMU                 0x69        // 7-bit address
 
-#define STATUS          0x00
-#define MODE            0x01
-#define GO              0x0C
-#define CONTROL3        0x1D
+#define PWR_MGMT_1          0x06
+#define LP_CONFIG           0x05
+#define INT_PIN_CFG         0x0F
+#define ACCEL_CONFIG        0x14
+#define GYRO_CONFIG_1       0x14
 
-#define MODE_PWM        0x03
-#define MODE_STANDBY    (1 << 6)
-#define GO_GO           0x01
-#define LIBRARY         0x03
+#define VAL_1               0x01
+#define VAL_2               0x40
+#define VAL_3               0x02
+#define VAL_4               0x38
+#define VAL_5               0x38
 
 
 void config_imu(void) {
-    // COME OUT OF STANDBY MODE
-    write_register(DRV2605L, MODE, MODE_STANDBY);
+    int i;
+   for (i=0; i<10000;i++); // Start-up time
+   printf("Connecting to ICM20948...\n");
+   for(i=0; i<100000; i++);
+   printf("...\n");
+   for(i=0; i<100; i++);
+   printf("...\n");
+   for(i=0; i<100; i++);
+   uint8_t whoami = read_register(IMU, 0x00); //Reads WHO_AM_I register
+   printf("Who am I? This is device 0x%x.\n",whoami);
 
-    // SET MODE REG TO 3
-    write_register(DRV2605L, MODE, MODE_PWM);
+    write_register(IMU, PWR_MGMT_1, VAL_1);
 
-    uint8_t mode_reg = read_register(DRV2605L, MODE);
+    write_register(IMU, LP_CONFIG, VAL_2);
 
-    // SET CONTROL3 TO PWM
-    write_register(DRV2605L, CONTROL3, STATUS);
+    write_register(IMU, INT_PIN_CFG, VAL_3);
 
-    // SELECT LRA LIBRARY
-    write_register(DRV2605L, LIBRARY, 0x06);
+    write_register(IMU, ACCEL_CONFIG, VAL_4);
 
-    mode_reg = read_register(DRV2605L, MODE);
-    if(mode_reg != MODE_PWM) {
-        P1 -> DIR |= BIT0;
-        P1 -> OUT |= BIT0;          // indicate error occured
-    }
+    write_register(IMU, GYRO_CONFIG_1, VAL_5);
+}
 
-    uint8_t control_three_reg = read_register(DRV2605L, CONTROL3);
-    if(control_three_reg != 0x00) {
-        P1 -> DIR |= BIT0;
-        P1 -> OUT |= BIT0;          // indicate error occured
-    }
+
+uint16_t accelerometer_x_axis(void){
+   uint16_t accel_x_axis = 0;
+   accel_x_axis = read_register(IMU, 0x2E);
+   printf("ax = %u\n", accel_x_axis);
+   return accel_x_axis;
 }

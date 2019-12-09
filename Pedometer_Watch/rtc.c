@@ -28,13 +28,9 @@ void config_rtc(void) {
     RTC_C -> DATE = (0x12 << RTC_C_DATE_MON_OFS) |    // Month = 0x12 = December
            (0x09 | RTC_C_DATE_DAY_OFS);             // Day = 0x02 = 2nd
     RTC_C -> TIM1 = (0x01 << RTC_C_TIM1_DOW_OFS) |   // Day of week = 0x01 = Monday
-           (0x09 << RTC_C_TIM1_HOUR_OFS);           // Hour = 0x11
-    RTC_C -> TIM0 = (0x46 << RTC_C_TIM0_MIN_OFS) |   // Minute = 0x33
+           (0x12 << RTC_C_TIM1_HOUR_OFS);           // Hour = 0x11
+    RTC_C -> TIM0 = (0x39 << RTC_C_TIM0_MIN_OFS) |   // Minute = 0x33
            (0x45 << RTC_C_TIM0_SEC_OFS);            // Seconds = 0x45
-
-    BSD_hour_24 = 9;
-    BSD_min = 46;
-    BSD_current_min = 46;
 
     // Start RTC calendar mode
     RTC_C -> CTL13 = RTC_C -> CTL13 & ~(RTC_C_CTL13_HOLD);
@@ -73,16 +69,6 @@ void RTC_C_IRQHandler(void)
     if (RTC_C -> CTL0 & RTC_C_CTL0_TEVIFG)
     {
 //        *t_hour = (RTC_C->TIM1 & (RTC_C_TIM1_HOUR_LD_MASK | RTC_C_TIM1_HOUR_HD_MASK))>>RTC_C_TIM1_HOUR_OFS;
-
-        if(BSD_min != 60) {
-            BSD_min += 1;
-        } else {
-            if(BSD_hour_24 == 24) {
-                BSD_hour_24 = 0;
-            }
-            BSD_min = 0;
-            BSD_hour_24 += 1;
-        }
 
         P1 -> OUT ^= BIT0;
 

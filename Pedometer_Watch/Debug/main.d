@@ -19,7 +19,7 @@ main.obj: C:/ti/ccs910/ccs/ccs_base/arm/include/CMSIS/cmsis_ccs.h
 main.obj: C:/ti/ccs910/ccs/ccs_base/arm/include/system_msp432p401r.h
 main.obj: ../rtc.h
 main.obj: ../i2c.h
-main.obj: ../time.h
+main.obj: ../imu.h
 main.obj: C:/ti/ccs910/ccs/tools/compiler/ti-cgt-arm_18.12.3.LTS/include/stdio.h
 main.obj: C:/ti/ccs910/ccs/tools/compiler/ti-cgt-arm_18.12.3.LTS/include/_ti_config.h
 main.obj: C:/ti/ccs910/ccs/tools/compiler/ti-cgt-arm_18.12.3.LTS/include/linkage.h
@@ -45,7 +45,7 @@ C:/ti/ccs910/ccs/ccs_base/arm/include/CMSIS/cmsis_ccs.h:
 C:/ti/ccs910/ccs/ccs_base/arm/include/system_msp432p401r.h: 
 ../rtc.h: 
 ../i2c.h: 
-../time.h: 
+../imu.h: 
 C:/ti/ccs910/ccs/tools/compiler/ti-cgt-arm_18.12.3.LTS/include/stdio.h: 
 C:/ti/ccs910/ccs/tools/compiler/ti-cgt-arm_18.12.3.LTS/include/_ti_config.h: 
 C:/ti/ccs910/ccs/tools/compiler/ti-cgt-arm_18.12.3.LTS/include/linkage.h: 

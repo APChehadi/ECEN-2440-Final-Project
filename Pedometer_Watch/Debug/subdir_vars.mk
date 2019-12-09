@@ -10,50 +10,50 @@ CMD_SRCS += \
 
 C_SRCS += \
 ../i2c.c \
+../imu.c \
 ../main.c \
 ../rtc.c \
 ../startup_msp432p401r_ccs.c \
-../system_msp432p401r.c \
-../time.c 
+../system_msp432p401r.c 
 
 C_DEPS += \
 ./i2c.d \
+./imu.d \
 ./main.d \
 ./rtc.d \
 ./startup_msp432p401r_ccs.d \
-./system_msp432p401r.d \
-./time.d 
+./system_msp432p401r.d 
 
 OBJS += \
 ./i2c.obj \
+./imu.obj \
 ./main.obj \
 ./rtc.obj \
 ./startup_msp432p401r_ccs.obj \
-./system_msp432p401r.obj \
-./time.obj 
+./system_msp432p401r.obj 
 
 OBJS__QUOTED += \
 "i2c.obj" \
+"imu.obj" \
 "main.obj" \
 "rtc.obj" \
 "startup_msp432p401r_ccs.obj" \
-"system_msp432p401r.obj" \
-"time.obj" 
+"system_msp432p401r.obj" 
 
 C_DEPS__QUOTED += \
 "i2c.d" \
+"imu.d" \
 "main.d" \
 "rtc.d" \
 "startup_msp432p401r_ccs.d" \
-"system_msp432p401r.d" \
-"time.d" 
+"system_msp432p401r.d" 
 
 C_SRCS__QUOTED += \
 "../i2c.c" \
+"../imu.c" \
 "../main.c" \
 "../rtc.c" \
 "../startup_msp432p401r_ccs.c" \
-"../system_msp432p401r.c" \
-"../time.c" 
+"../system_msp432p401r.c" 
 
 

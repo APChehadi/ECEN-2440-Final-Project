@@ -11,11 +11,11 @@ GEN_CMDS__FLAG :=
 
 ORDERED_OBJS += \
 "./i2c.obj" \
+"./imu.obj" \
 "./main.obj" \
 "./rtc.obj" \
 "./startup_msp432p401r_ccs.obj" \
 "./system_msp432p401r.obj" \
-"./time.obj" \
 "../msp432p401r.cmd" \
 $(GEN_CMDS__FLAG) \
 -llibc.a \
@@ -159,8 +159,8 @@ Pedometer_Watch.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "i2c.obj" "main.obj" "rtc.obj" "startup_msp432p401r_ccs.obj" "system_msp432p401r.obj" "time.obj" 
-	-$(RM) "i2c.d" "main.d" "rtc.d" "startup_msp432p401r_ccs.d" "system_msp432p401r.d" "time.d" 
+	-$(RM) "i2c.obj" "imu.obj" "main.obj" "rtc.obj" "startup_msp432p401r_ccs.obj" "system_msp432p401r.obj" 
+	-$(RM) "i2c.d" "imu.d" "main.d" "rtc.d" "startup_msp432p401r_ccs.d" "system_msp432p401r.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

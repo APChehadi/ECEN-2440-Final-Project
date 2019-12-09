@@ -1,1 +1,1 @@
-"./i2c.obj" "./main.obj" "./rtc.obj" "./startup_msp432p401r_ccs.obj" "./system_msp432p401r.obj" "../msp432p401r.cmd" -llibc.a 
+"./i2c.obj" "./main.obj" "./rtc.obj" "./startup_msp432p401r_ccs.obj" "./system_msp432p401r.obj" "./time.obj" "../msp432p401r.cmd" -llibc.a 

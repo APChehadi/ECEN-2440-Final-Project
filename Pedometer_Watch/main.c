@@ -1,6 +1,7 @@
 #include "msp.h"
 #include "rtc.h"
 #include "i2c.h"
+#include "time.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -13,4 +14,6 @@ void main(void)
 
 	config_rtc();
 	RTC_C_IRQHandler();
+
+	run_time();
 }

@@ -11,7 +11,7 @@
 #include <stdlib.h>
 
 
-void init_i2c(void) {
+void config_i2c(void) {
     // Initialize eUSCI_B regs with setting the UCSWRST bit
     EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_SWRST;   /*!< Software reset enable */
 
@@ -23,7 +23,7 @@ void init_i2c(void) {
                         EUSCI_B_CTLW0_MST    |  /*!< Master mode select */
                         EUSCI_B_CTLW0_UCSSEL_3);    /*!< SMCLK */
 
-    EUSCI_B0 -> BRW = 30;   // Setting clock prescalar for 100 kHz
+    EUSCI_B0 -> BRW = 8;   // Setting clock prescalar for 375 kHz
 
     // Clear UCSWRST in software
     EUSCI_B0 -> CTLW0 &= ~(EUSCI_B_CTLW0_SWRST);
@@ -35,7 +35,7 @@ void init_i2c(void) {
 
 
 
-uint8_t rx_data(uint8_t address, uint8_t reg) {
+uint8_t read_register(uint8_t address, uint8_t reg) {
     // MASTER TRANSMITTER MODE
     // Slave transmitter mode is entered when the slave address transmitted by the master is identical to its own
     // Master needs to act as transmitter to send the address so it can enter Slave Transmitter Mode / Master Receive Mode
@@ -44,14 +44,8 @@ uint8_t rx_data(uint8_t address, uint8_t reg) {
     // Write desired slave address to the UCBxI2CSA reg
     EUSCI_B0 -> I2CSA = address;
 
-    // Select the size of the slave address with the UCSLA10 bit
-    EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_SLA10;
-
     // UCBxTBCNT must be set to the number of bytes that are to be transmitted or received
     EUSCI_B0 -> TBCNT = 1;
-
-    // Setting UCTR for transmitter mode
-    EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_TR;
 
     // Set UCTXSTT to generate a START condition
     EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_TXSTT;
@@ -69,6 +63,9 @@ uint8_t rx_data(uint8_t address, uint8_t reg) {
     // MASTER RECEIVE MODE
     // Clear the UCTR for receiver mode
     EUSCI_B0 -> CTLW0 &= ~(EUSCI_B_CTLW0_TR);
+
+    // Write desired slave address to the UCBxI2CSA reg
+    EUSCI_B0 -> I2CSA = address;
 
     // UCBxTBCNT must be set to the number of bytes that are to be transmitted or received
     EUSCI_B0 -> TBCNT = 1;
@@ -99,7 +96,7 @@ uint8_t rx_data(uint8_t address, uint8_t reg) {
 
 
 
-void tx_data(uint8_t address, uint8_t reg, uint8_t value) {
+void write_register(uint8_t address, uint8_t reg, uint8_t value) {
     // MASTER TRANSMITTER MODE
     // Slave transmitter mode is entered when the slave address transmitted by the master is identical to its own
     // Master needs to act as transmitter to send the address so it can enter Slave Transmitter Mode / Master Receive Mode
@@ -108,14 +105,8 @@ void tx_data(uint8_t address, uint8_t reg, uint8_t value) {
     // Write desired slave address to the UCBxI2CSA reg
     EUSCI_B0 -> I2CSA = address;
 
-    // Select the size of the slave address with the UCSLA10 bit
-    EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_SLA10;
-
     // UCBxTBCNT must be set to the number of bytes that are to be transmitted or received
-    EUSCI_B0 -> TBCNT = 1;
-
-    // Setting UCTR for transmitter mode
-    EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_TR;
+    EUSCI_B0 -> TBCNT = 2;
 
     // Set UCTXSTT to generate a START condition
     EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_TXSTT;

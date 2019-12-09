@@ -12,7 +12,7 @@
 
 
 void init_i2c(void) {
-    // Initialize eUSCI_B registers with setting the UCSWRST bit
+    // Initialize eUSCI_B regs with setting the UCSWRST bit
     EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_SWRST;   /*!< Software reset enable */
 
     // Configure ports
@@ -29,19 +29,19 @@ void init_i2c(void) {
     EUSCI_B0 -> CTLW0 &= ~(EUSCI_B_CTLW0_SWRST);
 
     // Enable interrupts
-    EUSCI_B0 -> IFG = 0;    /*!< eUSCI_Bx Interrupt Flag Register */
+    EUSCI_B0 -> IFG = 0;    /*!< eUSCI_Bx Interrupt Flag reg */
 }
 
 
 
 
-void rx_data(uint8_t address, uint8_t register) {
+uint8_t rx_data(uint8_t address, uint8_t reg) {
     // MASTER TRANSMITTER MODE
     // Slave transmitter mode is entered when the slave address transmitted by the master is identical to its own
     // Master needs to act as transmitter to send the address so it can enter Slave Transmitter Mode / Master Receive Mode
     EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_TR;
 
-    // Write desired slave address to the UCBxI2CSA register
+    // Write desired slave address to the UCBxI2CSA reg
     EUSCI_B0 -> I2CSA = address;
 
     // Select the size of the slave address with the UCSLA10 bit
@@ -59,10 +59,10 @@ void rx_data(uint8_t address, uint8_t register) {
     // Wait for START condition
     while((EUSCI_B0 -> CTLW0) & EUSCI_B_CTLW0_TXSTT);
 
-    // Transfer register from Transfer Buffer
-    EUSCI_B0->TXBUF = register;
+    // Transfer reg from Transfer Buffer
+    EUSCI_B0 -> TXBUF = reg;
 
-    // Wait for buffer to transfer register
+    // Wait for buffer to transfer reg
     while(!((EUSCI_B0 -> IFG) & EUSCI_B_IFG_TXIFG0));
 
 
@@ -83,8 +83,8 @@ void rx_data(uint8_t address, uint8_t register) {
     while(!((EUSCI_B0 -> IFG) & EUSCI_B_IFG_RXIFG));
 
     // Read UCBxRXBUF
-    uint8_t rx_register_buffer_data = 0xFF;
-    rx_register_buffer_data = EUSCI_B0 -> RXBUF;
+    uint8_t rx_reg_buffer_data = 0xFF;
+    rx_reg_buffer_data = EUSCI_B0 -> RXBUF;
 
     // Generate STOP condition
     EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_TXSTP;
@@ -93,19 +93,19 @@ void rx_data(uint8_t address, uint8_t register) {
     while((EUSCI_B0 -> CTLW0) & EUSCI_B_CTLW0_TXSTT);
 
     // Return Slave Receive Data
-    return rx_register_buffer_data;
+    return rx_reg_buffer_data;
 }
 
 
 
 
-void tx_data(uint8_t address, uint8_t register, uint8_t value) {
+void tx_data(uint8_t address, uint8_t reg, uint8_t value) {
     // MASTER TRANSMITTER MODE
     // Slave transmitter mode is entered when the slave address transmitted by the master is identical to its own
     // Master needs to act as transmitter to send the address so it can enter Slave Transmitter Mode / Master Receive Mode
     EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_TR;
 
-    // Write desired slave address to the UCBxI2CSA register
+    // Write desired slave address to the UCBxI2CSA reg
     EUSCI_B0 -> I2CSA = address;
 
     // Select the size of the slave address with the UCSLA10 bit
@@ -123,10 +123,10 @@ void tx_data(uint8_t address, uint8_t register, uint8_t value) {
     // Wait for START condition
     while((EUSCI_B0 -> CTLW0) & EUSCI_B_CTLW0_TXSTT);
 
-    // Transfer register from Transfer Buffer
-    EUSCI_B0->TXBUF = register;
+    // Transfer reg from Transfer Buffer
+    EUSCI_B0->TXBUF = reg;
 
-    // Wait for buffer to transfer register
+    // Wait for buffer to transfer reg
     while(!((EUSCI_B0 -> IFG) & EUSCI_B_IFG_TXIFG0));
 
     // Transfer value from Transfer Buffer

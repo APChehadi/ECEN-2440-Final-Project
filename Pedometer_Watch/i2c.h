@@ -10,8 +10,8 @@
 
 void init_i2c(void);
 
-void rx_data(uint8_t address, uint8_t register);
+uint8_t rx_data(uint8_t address, uint8_t reg);
 
-void tx_data(uint8_t address, uint8_t register, uint8_t value);
+void tx_data(uint8_t address, uint8_t reg, uint8_t value);
 
 #endif /* I2C_H_ */

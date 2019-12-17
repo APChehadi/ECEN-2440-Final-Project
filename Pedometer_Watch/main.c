@@ -14,10 +14,6 @@ void main(void)
 
 	config_imu();
 
-	config_rtc();
-	RTC_C_IRQHandler();
-
-	while(1) {
-	    accelerometer_x_axis();
-	}
+//	config_rtc();
+//	RTC_C_IRQHandler();
 }

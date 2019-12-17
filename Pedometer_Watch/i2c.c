@@ -16,8 +16,8 @@ void config_i2c(void) {
     EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_SWRST;   /*!< Software reset enable */
 
     // Configure ports
-    P6->SEL0 |= (BIT4 | BIT5);
-    P6->SEL1 &= ~(BIT4 | BIT5);
+    P1->SEL0 |= (BIT6 | BIT7);
+    P1->SEL1 &= ~(BIT6 | BIT7);
 
     EUSCI_B0 -> CTLW0 |= (EUSCI_B_CTLW0_MODE_3 |  /*!< I2C mode */
                         EUSCI_B_CTLW0_MST    |  /*!< Master mode select */
